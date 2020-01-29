@@ -1,6 +1,6 @@
 import React from 'react';
 // import { Form as RFForm, useField } from 'react-final-form';
-import { Form, Input, Icon, Card, Row, Col } from 'antd';
+import { Form, Input, Card, Row, Col, Typography  } from 'antd';
 // import { Form, Field, useField, useForm } from 'react-final-form'
 import { useForm, useField } from 'react-final-form-hooks'
 import 'antd/dist/antd.css';
@@ -12,28 +12,36 @@ interface Props {
 
 const Sc00: React.SFC = () => {
 
-  const [state, setState] = React.useState({
-    user_name: '',
-    user_cep: ''
-  });
-
-  const handleSetState = (name: string, value: any) => {
-    setState(states => ({ ...states, [name]: value }));
-  }
-
-  const callForm = useForm;
-  const callField = useField;
+  const { Text } = Typography;
 
   const onSubmit = async (values: any) => {
     console.log(JSON.stringify(values));
   }
   const validate = (values: any) => {
-    const errors = { user_name: '', user_cep: '' }
+    const errors = { user_name: '', user_cep: '', user_add_street: '', user_add_number: '', user_add_bairro: '', user_city: '', user_uf: ''}
     if (!values.user_name) {
       errors.user_name = 'Required'
     }
     if (!values.user_cep) {
       errors.user_cep = 'Required'
+    }
+    if (values.user_cep && values.user_cep.replace(/\D/g, '').length < 8) {
+      errors.user_cep = 'Wrong CEP'
+    }
+    if (!values.user_add_street) {
+      errors.user_add_street = 'Required'
+    }
+    if (!values.user_add_number) {
+      errors.user_add_number = 'Required'
+    }
+    if (!values.user_add_bairro) {
+      errors.user_add_bairro = 'Required'
+    }
+    if (!values.user_city) {
+      errors.user_city = 'Required'
+    }
+    if (!values.user_uf) {
+      errors.user_uf = 'Required'
     }
     return errors
   }
@@ -79,7 +87,7 @@ const Sc00: React.SFC = () => {
               <label>User Name</label>
               <Input {...user_name.input} name={'user_name'} placeholder="Luke Skywalker" />
               {user_name.meta.touched &&
-                user_name.meta.error && <span>{user_name.meta.error}</span>}
+                user_name.meta.error && <Text type="danger">{user_name.meta.error}</Text>}
             </div>
           </Form.Item>
           <Form.Item>
@@ -93,7 +101,7 @@ const Sc00: React.SFC = () => {
                 max={10}
               />
               {user_cep.meta.touched &&
-                user_cep.meta.error && <span>{user_cep.meta.error}</span>}
+                user_cep.meta.error && <Text type="danger">{user_cep.meta.error}</Text>}
             </div>
           </Form.Item>
           <Form.Item>
@@ -101,7 +109,7 @@ const Sc00: React.SFC = () => {
               <label>User Street</label>
               <Input {...user_add_street.input} name={'user_add_street'} placeholder="Two Suns st." />
               {user_add_street.meta.touched &&
-                user_add_street.meta.error && <span>{user_add_street.meta.error}</span>}
+                user_add_street.meta.error && <Text type="danger">{user_add_street.meta.error}</Text>}
             </div>
           </Form.Item>
           <Form.Item>
@@ -109,7 +117,7 @@ const Sc00: React.SFC = () => {
               <label>Address Number</label>
               <Input {...user_add_number.input} name={'user_add_number'} placeholder="1234" />
               {user_add_number.meta.touched &&
-                user_add_number.meta.error && <span>{user_add_number.meta.error}</span>}
+                user_add_number.meta.error && <Text type="danger">{user_add_number.meta.error}</Text>}
             </div>
           </Form.Item>
           <Form.Item>
@@ -117,7 +125,7 @@ const Sc00: React.SFC = () => {
               <label>Address Bairro</label>
               <Input {...user_add_bairro.input} name={'user_add_bairro'} placeholder="Sand People" />
               {user_add_bairro.meta.touched &&
-                user_add_bairro.meta.error && <span>{user_add_bairro.meta.error}</span>}
+                user_add_bairro.meta.error && <Text type="danger">{user_add_bairro.meta.error}</Text>}
             </div>
           </Form.Item>
           <Form.Item>
@@ -125,7 +133,7 @@ const Sc00: React.SFC = () => {
               <label>City</label>
               <Input {...user_city.input} name={'user_city'} placeholder="Tatooine" />
               {user_city.meta.touched &&
-                user_city.meta.error && <span>{user_city.meta.error}</span>}
+                user_city.meta.error && <Text type="danger">{user_city.meta.error}</Text>}
             </div>
           </Form.Item>
           <Form.Item>
@@ -133,7 +141,7 @@ const Sc00: React.SFC = () => {
               <label>State</label>
               <Input {...user_uf.input} name={'user_uf'} placeholder="Skywalker Ville" />
               {user_uf.meta.touched &&
-                user_uf.meta.error && <span>{user_uf.meta.error}</span>}
+                user_uf.meta.error && <Text type="danger">{user_uf.meta.error}</Text>}
             </div>
           </Form.Item>
           <div className="buttons">
