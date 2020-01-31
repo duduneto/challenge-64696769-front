@@ -4,6 +4,7 @@ import { useForm, useField } from 'react-final-form-hooks'
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import { formatCEP } from './modules';
 import gql from 'graphql-tag';
+import {List} from './'
 
 import 'antd/dist/antd.css';
 
@@ -15,6 +16,7 @@ interface State {
 }
 
 interface UserInventory {
+  id: string,
   user_name: string;
   user_cep: string;
   user_add_street: string;
@@ -26,15 +28,14 @@ interface UserInventory {
 const SAVE_USER = gql`
   mutation CreateUser($user_name: String!, $user_cep: String! $user_add_street: String!, $user_add_number: String!, $user_add_bairro: String!, $user_city: String!, $user_uf: String!) {
     createUser(user_name: $user_name, user_cep: $user_cep, user_add_street: $user_add_street, user_add_number: $user_add_number, user_add_bairro: $user_add_bairro, user_city: $user_city, user_uf: $user_uf) {
-      id
-    }
-  }
-`;
-
-const GET_ROCKET_INVENTORY = gql`
-  query {
-    users{
-      email
+      id,
+      user_name,
+      user_cep,
+      user_add_street,
+      user_add_number,
+      user_add_bairro,
+      user_city,
+      user_uf
     }
   }
 `;
@@ -44,6 +45,7 @@ const Sc00: React.SFC = () => {
   //  --------- Set Hook -----------
   const [ufs, setUfs] = React.useState({ estados: [] })
   const [state, setState] = React.useState({user_city: undefined, user_uf: undefined})
+  const [compState, setCompState] = React.useState({users: []});
 
   let cidades = require('../services/cidades.json');
 
@@ -89,7 +91,7 @@ const Sc00: React.SFC = () => {
 
   // --------------------- CONFIG APOLLO REQUEST -------------------
   let [saveUser, { error, loading, data }] = useMutation<
-    { saveUser: UserInventory },
+    { saveUser: UserInventory, createUser: UserInventory },
     UserInventory
   >(SAVE_USER, {
     variables: { ...values, ...state }
@@ -112,13 +114,22 @@ const Sc00: React.SFC = () => {
   }
 
   React.useEffect(() => {
-    !!data && message.success('User Created');
+    !!data && (() => {
+      message.success('User Created');
+      setCompState((states: any) => ({
+        ...states,
+        users: [...states.users, data]
+      }))
+    })()
   }, [data])
+
+  console.log(data)
 
   // ----------------------------------------------------------------
 
   return (
     <Row type="flex" justify="center" style={{ marginTop: '3rem' }}>
+      <List parentState={compState} parentSetState={setCompState} />
       <Card style={{ width: '80%' }}>
         <Row >
           <Col span={16} offset={4}>
